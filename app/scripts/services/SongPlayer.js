@@ -14,19 +14,18 @@ Write documentation for the remaining undocumented attributes and functions of t
 
 
 (function() {
-     function SongPlayer() {
-			
-
+     function SongPlayer(Fixtures) {
 		/**
 		* @desc SongPlayer makes this constructor's method and attributes available publicly
 		* @type {Object}
 		*/	
 			var SongPlayer = {};
+
 		/**
-		* @desc Current Song File
+		* @desc Current Album holds a copy of the albumPicasso object.
 		* @type {Object}
 		*/
-			var currentSong = null;
+			var currentAlbum = Fixtures.getAlbum();
 
 		/**
 		* @desc Buzz object audio file
@@ -42,7 +41,7 @@ Write documentation for the remaining undocumented attributes and functions of t
 			var setSong = function(song) {
 				if (currentBuzzObject) {
 				  currentBuzzObject.stop();
-				  currentSong.playing = null;
+				  SongPlayer.currentSong.playing = null;
 				}
 
 				currentBuzzObject = new buzz.sound(song.audioUrl, {
@@ -50,8 +49,22 @@ Write documentation for the remaining undocumented attributes and functions of t
 				  preload: true
 				});
 
-				currentSong = song;
+				SongPlayer.currentSong = song;
 			};
+
+		/**
+		* @function getSongIndex 
+		* @desc Returns index of our song variable (set above in setSong).
+		*/
+			var getSongIndex = function(){
+				return currentAlbum.songs.indexOf(song);
+			};
+
+		/**
+		* @desc Current Song File
+		* @type {Object}
+		*/
+			 SongPlayer.currentSong = null;
 
 		/**
 		* @function playSong
@@ -69,10 +82,11 @@ Write documentation for the remaining undocumented attributes and functions of t
 		* @param {Object} song
 		*/	
 			SongPlayer.play = function(song) {
-				if (currentSong !== song) {
+				song = song || SongPlayer.currentSong;
+				if (SongPlayer.currentSong !== song) {
 				 	setSong(song);
 					playSong(song);
-				} else if (currentSong === song) {
+				} else if (SongPlayer.currentSong === song) {
          if (currentBuzzObject.isPaused()) {
              playSong(song);	
          }
@@ -84,14 +98,31 @@ Write documentation for the remaining undocumented attributes and functions of t
 		* @param {Object} song
 		*/	
 			SongPlayer.pause = function(song) {
+				song = song || SongPlayer.currentSong;
      		currentBuzzObject.pause();
      		song.playing = false;
+ 			};
+ 		/**
+		* @function SongPlayer's previous method 
+		* @desc Sets the current song to be the previous one in the array.
+		*/	
+ 			SongPlayer.previous = function(){
+ 				var currentSongIndex = getSongIndex(SongPlayer.currentSong);
+ 				currentSongIndex--;
+ 				if(currentSongIndex < 0){
+ 					currentBuzzObject.stop();
+ 					SongPlayer.currentSong.playing = null;
+ 				} else {
+ 					var song = currentAlbum.songs[currentSongIndex];
+ 					setSong(song);
+ 					playSong(song);
+ 				}
  			};
  
  			return SongPlayer;
  		}
      	angular
          .module('blocJams')
-         .factory('SongPlayer', SongPlayer);
+         .factory('SongPlayer', ['Fixtures', SongPlayer]);
     
  })();
