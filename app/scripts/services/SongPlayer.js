@@ -40,6 +40,7 @@ Write documentation for the remaining undocumented attributes and functions of t
 		*/
 			var setSong = function(song) {
 				if (currentBuzzObject) {
+					//Just won't change this instance to stopSong because it is defined before.
 				  currentBuzzObject.stop();
 				  SongPlayer.currentSong.playing = null;
 				}
@@ -77,6 +78,16 @@ Write documentation for the remaining undocumented attributes and functions of t
 			};
 
 		/**
+		* @function stopSong
+		* @desc Stops currentBuzzObject file and set's song's playing state to false.
+		* @param {Object} song
+		*/	
+			var stopSong = function(song){
+				currentBuzzObject.stop(); 
+				song.playing = null;
+			};
+
+		/**
 		* @function SongPlayer's play method 
 		* @desc sets and plays song
 		* @param {Object} song
@@ -110,8 +121,23 @@ Write documentation for the remaining undocumented attributes and functions of t
  				var currentSongIndex = getSongIndex(SongPlayer.currentSong);
  				currentSongIndex--;
  				if(currentSongIndex < 0){
- 					currentBuzzObject.stop();
- 					SongPlayer.currentSong.playing = null;
+ 					stopSong();
+ 				} else {
+ 					var song = currentAlbum.songs[currentSongIndex];
+ 					setSong(song);
+ 					playSong(song);
+ 				}
+ 			};
+
+ 			/**
+		* @function SongPlayer's next method 
+		* @desc Sets the current song to be the next one in the array.
+		*/	
+ 			SongPlayer.next = function(){
+ 				var currentSongIndex = getSongIndex(SongPlayer.currentSong);
+ 				currentSongIndex++;
+ 				if(currentSongIndex >= currentAlbum.songs.length){
+ 					stopSong();
  				} else {
  					var song = currentAlbum.songs[currentSongIndex];
  					setSong(song);
