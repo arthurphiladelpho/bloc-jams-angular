@@ -1,6 +1,21 @@
 (function() {
-     function SongPlayer() {
+     function SongPlayer(Fixtures) {
 			var SongPlayer = {};
+
+		/**
+ 		* @desc An instance of albumPicasso.
+		* @type {Object}
+ 		*/
+			var currentAlbum = Fixtures.getAlbum();
+
+		/**
+		* @function getSongIndex
+		* @desc Gets the index of a song in the songs array
+		* @param {Object} song
+		*/
+			var getSongIndex = function(song) {
+     		return currentAlbum.songs.indexOf(song);
+ 			};
 
 		/**
  		* @desc Current song object
@@ -18,6 +33,16 @@
 		* @type {Object}
 		*/
 			var currentBuzzObject = null;
+
+		/**
+		* @function playSong
+		* @desc Plays currentBuzzObject and sets song's playing property to true.
+		* @param {Object} song
+		*/
+			var playSong = function(){
+				currentBuzzObject.play();
+				song.playing = true;
+			};
 
 		/**
 		* @function setSong
@@ -44,13 +69,13 @@
 		* @param {Object} song
 		*/
 			SongPlayer.play = function(song) {
+				song = song || SongPlayer.currentSong;
 				if (SongPlayer.currentSong !== song) {
 				 	setSong(song);
-					currentBuzzObject.play(); 
-					song.playing = true; 
+					playSong();
 				} else if (SongPlayer.currentSong === song) {
          if (currentBuzzObject.isPaused()) {
-             currentBuzzObject.play();
+             playSong();
          }
      }
 			};
@@ -61,6 +86,7 @@
 		* @param {Object} song
 		*/
 			SongPlayer.pause = function(song) {
+				song = song || SongPlayer.currentSong;
      		currentBuzzObject.pause();
      		song.playing = false;
  			};
