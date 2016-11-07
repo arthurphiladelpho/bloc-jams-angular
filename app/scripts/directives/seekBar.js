@@ -23,7 +23,11 @@
 	 		* @desc Specifies a new scope for this directive.
 			* @type {Object}
 	 		*/
-	    scope: {},
+	    scope: {
+
+	    	onChange: '&'
+	    	
+	    },
 	    /**
 			* @function link
 			* @desc Registers DOM listeners and updates DOM.
@@ -77,6 +81,7 @@
 			     		scope.onClickSeekBar = function(event) {
 			         	var percent = calculatePercent(seekBar, event);
 			         	scope.value = percent * scope.max;
+			         	notifyOnChange(scope.value);
 			     		};
 			     		/**
 							* @function trackThumb
@@ -87,8 +92,19 @@
 			    				var percent = calculatePercent(seekBar, event);
 			     				scope.$apply(function() {
 			         			scope.value = percent * scope.max;
+			         			notifyOnChange(scope.value);
 			     				});
 			 					});
+			 				/**
+							* @function notifyOnChange
+							* @desc Sets the value variable to newValue in a new passed in function.
+							* @param newValue depends on the function. For our purposes a number.
+							*/
+			 				var notifyOnChange = function(newValue) {
+								if (typeof scope.onChange === 'function') {
+							     scope.onChange({value: newValue});
+								}
+							};
 
 			 					$document.bind('mouseup.thumb', function() {
 			     				$document.unbind('mousemove.thumb');
