@@ -16,43 +16,47 @@
 	    restrict: 'E',
 	    scope: {},
 	    link: function(scope, element, attributes){
-	     			scope.value = 0;
-	     			scope.max = 100;
-	     			var seekBar = $(element);
-	     			var percentString = function(){
-	     			var value = scope.value;
-	     			var max = scope.max;
-	     			var percent = value / max * 100;
-	     			return percent + "%";
-	     		};
+			     		scope.value = 0;
+			     		scope.max = 100;
+			     		var seekBar = $(element);
+			     		var percentString = function(){
+			     			var value = scope.value;
+			     			var max = scope.max;
+			     			var percent = value / max * 100;
+			     			return percent + "%";
+			     		};
 
-	     		scope.fillStyle = function() {
-	     			return {width: percentString()};
-	     		};
+			     		scope.fillStyle = function() {
+			     			return {width: percentString()};
+			     		};
 
-	     		scope.onClickSeekBar = function(event) {
-	         	var percent = calculatePercent(seekBar, event);
-	         	scope.value = percent * scope.max;
-	     		};
+			     		scope.thumbStyle = function(){
+			     			return {width: trackThumb()};
+			     		}
 
-	     		scope.trackThumb = function() {
-	 					$document.bind('mousemove.thumb', function(event) {
-	    				var percent = calculatePercent(seekBar, event);
-	     				scope.$apply(function() {
-	         			scope.value = percent * scope.max;
-	     				});
-	 					});
+			     		scope.onClickSeekBar = function(event) {
+			         	var percent = calculatePercent(seekBar, event);
+			         	scope.value = percent * scope.max;
+			     		};
 
-	 					$document.bind('mouseup.thumb', function() {
-	     				$document.unbind('mousemove.thumb');
-			        $document.unbind('mouseup.thumb');
-	 					});
-					};
+			     		scope.trackThumb = function() {
+			 					$document.bind('mousemove.thumb', function(event) {
+			    				var percent = calculatePercent(seekBar, event);
+			     				scope.$apply(function() {
+			         			scope.value = percent * scope.max;
+			     				});
+			 					});
+
+			 					$document.bind('mouseup.thumb', function() {
+			     				$document.unbind('mousemove.thumb');
+					        $document.unbind('mouseup.thumb');
+			 					});
+							};
 	    	}
 	 		};
 		}
 
 	angular
 	  .module('blocJams')
-	  .directive('seekBar', ['$document', seekBar);
+	  .directive('seekBar', ['$document', seekBar]);
  })();
