@@ -94,7 +94,6 @@
  		/**
 		* @function previous
 		* @desc Sets the currentSongIndex to one less then it is and plays it. If it is the first song in the array, stops playing.
-		* @param {Object} song
 		*/
  			SongPlayer.previous = function() {
      		var currentSongIndex = getSongIndex(SongPlayer.currentSong);
@@ -108,7 +107,24 @@
          	setSong(song);
          	playSong(song);
      		}
+ 			};
 
+ 			/**
+		* @function next
+		* @desc Sets the currentSongIndex to one more then it is and plays it. If it is the last song in the array, stops playing.
+		*/
+ 			SongPlayer.next = function() {
+     		var currentSongIndex = getSongIndex(SongPlayer.currentSong);
+     		currentSongIndex++;
+
+     		if (currentSongIndex >= songs.length) {
+         	currentBuzzObject.stop();
+         	SongPlayer.currentSong.playing = null;
+     		} else {
+         	var song = currentAlbum.songs[currentSongIndex];
+         	setSong(song);
+         	playSong(song);
+     		}
  			};
  
  			return SongPlayer;
