@@ -69,7 +69,7 @@
 				  preload: true
 				});
 				/**
-				* @function annonymous - is binded to the Buzz library's timeupdate method.
+				* @function currentTime - is binded to the Buzz library's timeupdate method.
 				* @desc Gets current time in Buzz Object.
 				* @param {Object} song
 				*/
@@ -78,9 +78,25 @@
             SongPlayer.currentTime = currentBuzzObject.getTime();
         	});
     		});
+				/**
+				* @function setVolume
+				* @desc Updates volume on change
+				*/
+    		currentBuzzObject.bind('volumechange', function() {
+        	$rootScope.$apply(function() {
+            SongPlayer.setVolume = currentBuzzObject.getVolume();
+        	});
+    		});
 
 				SongPlayer.currentSong = song;
 			};
+
+
+		/**
+		* @desc Holds the volume of SongPlayer
+		* @type {Number} 
+		*/
+		SongPlayer.volume = currentBuzzObject.getVolume();
 
 		/**
 		* @function play
