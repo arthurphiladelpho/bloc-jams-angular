@@ -96,7 +96,8 @@
 		* @desc Holds the volume of SongPlayer
 		* @type {Number} 
 		*/
-		SongPlayer.volume = currentBuzzObject.getVolume();
+		// SongPlayer.volume = currentBuzzObject.getVolume();
+		SongPlayer.volume = 50;
 
 		/**
 		* @function play
@@ -109,8 +110,9 @@
 				 	setSong(song);
 					playSong();
 				} else if (SongPlayer.currentSong === song) {
+					console.log(song);
          if (currentBuzzObject.isPaused()) {
-             playSong();
+            playSong();
          }
      }
 			};
