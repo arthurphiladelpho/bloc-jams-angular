@@ -12,11 +12,19 @@
       SongPlayer.currentSong = null;
       var currentBuzzObject = null;
 
+      var playSong = function(song){
+        currentBuzzObject.play(); 
+        song.playing = true;
+      };
+
+      var stopSong = function(){
+        currentBuzzObject.stop();
+        SongPlayer.currentSong.playing = null;
+      };
 
       var setSong = function(song) {
         if (currentBuzzObject) {
-          currentBuzzObject.stop();
-          SongPlayer.currentSong.playing = null;
+          stopSong();
         }
         // Set the current buzz object to be a new buzz sound object referencing the 'song' variable.
         currentBuzzObject = new buzz.sound(song.audioUrl, {
@@ -25,11 +33,6 @@
         });
 
         SongPlayer.currentSong = song;
-      };
-
-      var playSong = function(song){
-        currentBuzzObject.play(); 
-        song.playing = true;
       };
 
       // Here we set a play method for our SongPlayer Object.
@@ -53,7 +56,29 @@
         song.playing = false;
       };
 
-      
+      SongPlayer.previous = function() {
+        var currentSongIndex = getSongIndex(SongPlayer.currentSong);
+        currentSongIndex--;
+        if (currentSongIndex < 0) {
+          stopSong();
+        } else {
+          var song = currentAlbum.songs[currentSongIndex];
+          setSong(song);
+          playSong(song);
+        }
+      };
+
+      SongPlayer.next = function() {
+        var currentSongIndex = getSongIndex(SongPlayer.currentSong);
+        currentSongIndex++;
+        if (currentSongIndex >= currentAlbum.songs.length) {
+          stopSong();
+        } else {
+          var song = currentAlbum.songs[currentSongIndex];
+          setSong(song);
+          playSong(song);
+        }
+      };
 
       // Return the SongPlayer Object
       return SongPlayer;
