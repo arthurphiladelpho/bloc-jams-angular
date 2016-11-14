@@ -95,6 +95,8 @@
 			         			notifyOnChange(scope.value);
 			     				});
 			 					});
+
+			 					
 			 				/**
 							* @function notifyOnChange
 							* @desc Sets the value variable to newValue in a new passed in function.
