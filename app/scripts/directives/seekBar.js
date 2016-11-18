@@ -22,12 +22,24 @@
          templateUrl: '/templates/directives/seek_bar.html',
          replace: true,
          restrict: 'E',
-         scope: { },
+         scope: {
+				   onChange: '&'
+		     },
          link: function(scope, element, attributes) {
             scope.value = 0;
             scope.max = 100;
  						// Define seekBar variable as the seekBar element we are referring to this moment. ie: volume seekBar or song position seekBar.
             var seekBar = $(element);
+
+            //Observes the scope.value attribute and sets it to newValue - which it is the new position of the seekBars thumb.
+            attributes.$observe('value', function(newValue) {
+						  scope.value = newValue;
+						}); 
+
+            //Observes the scope.max attribute and updates it to newValue.
+						attributes.$observe('max', function(newValue) {
+						  scope.max = newValue;
+						});
 
             var percentString = function () {
 							var value = scope.value;
@@ -50,6 +62,7 @@
             scope.onClickSeekBar = function(event) {
 							var percent = calculatePercent(seekBar, event);
 							scope.value = percent * scope.max;
+							notifyOnChange(scope.value);
          		};
 
 
@@ -63,6 +76,7 @@
 	         			//.$apply here is what makes sure the seekbar is updated every move the mouse makes.
 	         			scope.$apply(function() {
 	             		scope.value = percent * scope.max;
+	             		notifyOnChange(scope.value);
 	         			});
      					});
  							//Here we add functionality for when the user lets go of the mouse, we stop modyfing the scope.value.
@@ -70,6 +84,12 @@
          				$document.unbind('mousemove.thumb');
          				$document.unbind('mouseup.thumb');
      					});
+ 						};
+
+ 						var notifyOnChange = function(newValue) {
+				      if (typeof scope.onChange === 'function') {
+				        scope.onChange({value: newValue});
+				      }
  						};
 
    			  }
